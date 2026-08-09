@@ -1,0 +1,97 @@
+{
+  "mechanisms": [
+    {
+      "id": "recruitment-game",
+      "name": "招聘博弈机制",
+      "description": "与招聘者的动态博弈：海量招聘需求超出团队处理能力，通过市场化微型创业设计，让候选人在系统内自证价值。",
+      "players": [
+        {
+          "id": "candidate",
+          "name": "候选人",
+          "role": "博弈方——自证能提供增量"
+        },
+        {
+          "id": "company",
+          "name": "量潮",
+          "role": "机制设计者——定规则、给资源、做选择"
+        }
+      ],
+      "strategies": [
+        {
+          "id": "candidate_parasite",
+          "player_id": "candidate",
+          "name": "白嫖学习资源",
+          "description": "只来收割学习资源，把公司当工具机构"
+        },
+        {
+          "id": "candidate_intern",
+          "player_id": "candidate",
+          "name": "刷短期实习",
+          "description": "意向平衡，想刷一段实习经历"
+        },
+        {
+          "id": "candidate_value",
+          "player_id": "candidate",
+          "name": "提供增量",
+          "description": "在系统内找到目标——给内部服务或直接找外部市场"
+        },
+        {
+          "id": "company_transparent",
+          "player_id": "company",
+          "name": "最大限度透明竞争",
+          "description": "透明竞争提高人才选拔效率，剩余者转化为实训基地人员"
+        },
+        {
+          "id": "company_three_tier",
+          "player_id": "company",
+          "name": "三层筛选",
+          "description": "问卷 + AI 辅助打分：理想 / 观察 / 明确不要"
+        }
+      ],
+      "rules": [
+        {
+          "id": "rule_pool",
+          "name": "市场化微型创业",
+          "description": "把所有候选人拉进一个池子，自己找题，进行高度市场化的微型创业"
+        },
+        {
+          "id": "rule_filter",
+          "name": "AI 打分三层分类",
+          "description": "调研问卷 + AI 辅助打分：理想 6 / 观察 22 / 不要 2（30 份回复）"
+        },
+        {
+          "id": "rule_convert",
+          "name": "白嫖者转化",
+          "description": "把想白嫖学习资源的人转化为实训基地人员，招聘从成本项变收益项"
+        },
+        {
+          "id": "rule_recruit_to_class",
+          "name": "招聘给课堂导流",
+          "description": "考核全部放进实训基地，使用生产实习与实践课计划——支撑社会招生与高校合作"
+        }
+      ],
+      "objectives": [
+        {
+          "id": "obj_retain",
+          "name": "招到留得住的人",
+          "description": "留得住、负责任、能面对困难的人；宁缺毋滥"
+        },
+        {
+          "id": "obj_cost_to_revenue",
+          "name": "成本项变收益项",
+          "description": "把招聘从成本项变成收益项（实训基地转化）"
+        },
+        {
+          "id": "obj_efficiency",
+          "name": "选拔效率最大化",
+          "description": "通过透明竞争提高人才选拔效率"
+        },
+        {
+          "id": "obj_brand",
+          "name": "维护长期品牌声誉",
+          "description": "掌握微妙平衡，保护长期的品牌声誉"
+        }
+      ]
+    }
+  ]
+}

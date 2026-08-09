@@ -59,9 +59,9 @@ struct MechanismDoc {
     mechanisms: Vec<Mechanism>,
 }
 
-/// 默认种子数据路径：Studio 共享的 mechanisms.json（仓库根相对）
+/// 默认种子数据路径：CLI 独立维护的 mechanisms.json（src/cli/data/）
 pub fn default_path() -> String {
-    "src/studio/assets/data/mechanisms.json".to_string()
+    "src/cli/data/mechanisms.json".to_string()
 }
 
 /// 列出机制摘要
@@ -120,9 +120,8 @@ mod tests {
 
     #[test]
     fn load_parses_seed_data() {
-        // 仓库根：src/cli/../..（qtcloud-econ 根），种子数据在 src/studio/assets/data/
-        let path = Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../../src/studio/assets/data/mechanisms.json");
+        // CLI 独立种子数据：src/cli/data/mechanisms.json
+        let path = Path::new(env!("CARGO_MANIFEST_DIR")).join("data/mechanisms.json");
         let mechanisms = load(&path).expect("种子数据应可解析");
         assert!(!mechanisms.is_empty());
         assert_eq!(mechanisms[0].id, "recruitment-game");
