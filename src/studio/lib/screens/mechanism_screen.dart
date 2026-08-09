@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-import '../components/mechanism_card.dart';
+import '../widgets/mechanism_card.dart';
 import '../models/mechanism.dart';
 
 /// 机制设计模块——机制列表页
