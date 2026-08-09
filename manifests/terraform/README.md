@@ -7,7 +7,7 @@
 | 资源 | 说明 |
 | --- | --- |
 | `alicloud_oss_bucket.studio` | OSS 桶（public-read + 静态网站托管），与 deploy-studio.yml 的 `oss://` 路径一致 |
-| `alicloud_cdn_domain_new.studio` | CDN 加速域名（econ.quanttide.com），回源 OSS |
+| `alicloud_cdn_domain_new.studio` | CDN 加速域名（econ.cloud.quanttide.com），回源 OSS |
 
 ## 使用
 
@@ -21,7 +21,7 @@ terraform apply
 ## 前置条件
 
 1. 阿里云账号已配置（`ALICLOUD_ACCESS_KEY` / `ALICLOUD_SECRET_KEY` 环境变量或 provider 配置）
-2. 域名 `econ.quanttide.com` 已在阿里云 CDN 接入（DNS CNAME 指向 `kunlunaq.com`）
+2. 域名 `econ.cloud.quanttide.com` 已在阿里云 CDN 接入（DNS CNAME 指向 `kunlunaq.com`）
 3. 大陆节点需 ICP 备案；未备案用 `cdn_scope = "overseas"`
 
 ## 关键经验（qtcloud-data 2026-08-08 踩坑记录）

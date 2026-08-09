@@ -32,6 +32,8 @@ jobs:
       - run: ossutil cp src/studio/build/web/flutter_bootstrap.js oss://qtcloud-econ-studio/flutter_bootstrap.js -f --meta=Cache-Control:no-cache
 
       - name: Refresh CDN
+        # CDN 域名处于审核/接入期时刷新会失败，不应阻断整体部署（内容已上传 OSS）
+        continue-on-error: true
         run: |
           pip install aliyun-python-sdk-cdn
           python -c "
@@ -39,7 +41,7 @@ jobs:
           from aliyunsdkcdn.request.v20180510.RefreshObjectCachesRequest import RefreshObjectCachesRequest
           import os
           cli = AcsClient(os.environ['ALIYUN_ACCESS_KEY_ID'], os.environ['ALIYUN_ACCESS_KEY_SECRET'], 'cn-hangzhou')
-          for domain in ['econ.quanttide.com']:
+          for domain in ['econ.cloud.quanttide.com']:
               req = RefreshObjectCachesRequest()
               req.set_ObjectPath(f'https://{domain}/')
               req.set_ObjectType('Directory')

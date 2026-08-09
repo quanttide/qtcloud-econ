@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## [0.1.0-alpha.2] - 2026-08-09
+
+### Fixed
+
+- 部署链路落地：OSS 桶（public-read + 静态网站托管）与 CDN 域名创建完成
+- 域名切换为 econ.cloud.quanttide.com（IaC/CI 同步更新）
+- CI 部署容错：CDN 刷新在域名接入期失败不再阻断部署
+
 ## [0.1.0-alpha.1] - 2026-08-09
 
 ### Added

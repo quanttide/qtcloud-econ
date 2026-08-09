@@ -36,7 +36,7 @@ resource "alicloud_oss_bucket" "studio" {
 }
 
 # ============================================================
-# CDN 域名：econ.quanttide.com
+# CDN 域名：econ.cloud.quanttide.com
 # 前置条件：
 #   1. 域名已在阿里云 CDN 完成接入（DNS CNAME 已指向 kunlunaq.com）
 #   2. 大陆节点需要 ICP 备案；未备案请使用 scope = "overseas"
