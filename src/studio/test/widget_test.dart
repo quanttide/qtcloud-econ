@@ -7,6 +7,6 @@ void main() {
     await tester.pumpWidget(const EconApp());
     await tester.pumpAndSettle();
     expect(find.text('机制设计'), findsOneWidget);
-    expect(find.text('招聘博弈机制'), findsOneWidget);
+    expect(find.text('基于贡献证明的内部货币化信号甄别与转化平台'), findsOneWidget);
   });
 }

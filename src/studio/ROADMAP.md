@@ -28,7 +28,7 @@ Mechanism
 
 ### 示例数据
 
-- [x] 以招聘博弈机制为第一个示例（journal 2026-08-09：候选人池/自找题/市场化微型创业/三层筛选）
+- [x] 以基于贡献证明的内部货币化信号甄别与转化平台为第一个示例（data/profile/mechanism/contribution-based-singaling）
 - [x] 示例数据文件（`assets/data/mechanisms.json`）
 
 ### 验证
