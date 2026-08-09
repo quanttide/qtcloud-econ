@@ -1,0 +1,108 @@
+use clap::{Parser, Subcommand};
+use qtcloud_econ_cli::mechanism::{self, Mechanism};
+use std::path::PathBuf;
+use std::process;
+
+#[derive(Parser)]
+#[command(
+    name = "qtcloud-econ",
+    about = "量潮经济云 — 机制设计与经济建模",
+    version,
+    disable_help_subcommand(true)
+)]
+struct Cli {
+    /// 机制种子数据路径（默认 assets/data/mechanisms.json）
+    #[arg(long, global = true)]
+    path: Option<PathBuf>,
+
+    #[command(subcommand)]
+    command: Commands,
+}
+
+#[derive(Subcommand)]
+enum Commands {
+    /// 机制设计命令集
+    Mechanism {
+        #[command(subcommand)]
+        action: MechanismAction,
+    },
+}
+
+#[derive(Subcommand)]
+enum MechanismAction {
+    /// 列出全部机制
+    List,
+    /// 显示机制详情
+    Show {
+        /// 机制 id
+        id: String,
+    },
+}
+
+fn main() {
+    let cli = Cli::parse();
+    let path = cli
+        .path
+        .unwrap_or_else(|| PathBuf::from(mechanism::default_path()));
+
+    let result = match cli.command {
+        Commands::Mechanism { action } => match action {
+            MechanismAction::List => run_list(&path),
+            MechanismAction::Show { id } => run_show(&path, &id),
+        },
+    };
+
+    if let Err(e) = result {
+        eprintln!("错误：{e}");
+        process::exit(1);
+    }
+}
+
+fn run_list(path: &PathBuf) -> Result<(), String> {
+    let mechanisms = mechanism::load(path)?;
+    if mechanisms.is_empty() {
+        println!("暂无机制（{}）", path.display());
+        return Ok(());
+    }
+    println!("机制列表（{}）：", path.display());
+    println!();
+    for m in &mechanisms {
+        println!("  {}", mechanism::summarize(m));
+    }
+    Ok(())
+}
+
+fn run_show(path: &PathBuf, id: &str) -> Result<(), String> {
+    let mechanisms = mechanism::load(path)?;
+    let m = mechanisms
+        .iter()
+        .find(|m| m.id == id)
+        .ok_or_else(|| format!("机制不存在：{id}（可用 mechanism list 查看）"))?;
+    print_detail(m);
+    Ok(())
+}
+
+fn print_detail(m: &Mechanism) {
+    println!("{} — {}", m.id, m.name);
+    println!("{}", m.description);
+    println!();
+    println!("参与者：");
+    for p in &m.players {
+        println!("  · {}（{}）", p.name, p.role);
+    }
+    println!();
+    println!("策略空间：");
+    for s in &m.strategies {
+        println!("  · {}：{}", s.name, s.description);
+    }
+    println!();
+    println!("规则（结果函数）：");
+    for r in &m.rules {
+        println!("  · {}：{}", r.name, r.description);
+    }
+    println!();
+    println!("设计目标：");
+    for o in &m.objectives {
+        println!("  · {}：{}", o.name, o.description);
+    }
+}
