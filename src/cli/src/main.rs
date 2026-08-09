@@ -1,6 +1,8 @@
 use clap::{Parser, Subcommand};
+use qtcloud_econ_cli::clarify;
+use qtcloud_econ_cli::design;
 use qtcloud_econ_cli::mechanism::{self, Mechanism};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::process;
 
 #[derive(Parser)]
@@ -11,7 +13,7 @@ use std::process;
     disable_help_subcommand(true)
 )]
 struct Cli {
-    /// 机制种子数据路径（默认 assets/data/mechanisms.json）
+    /// 机制种子数据路径（默认 src/cli/data/mechanisms.json）
     #[arg(long, global = true)]
     path: Option<PathBuf>,
 
@@ -25,6 +27,24 @@ enum Commands {
     Mechanism {
         #[command(subcommand)]
         action: MechanismAction,
+    },
+    /// 需求澄清——模糊业务描述 → 结构化需求
+    Clarify {
+        /// 输入描述文件（Markdown）
+        #[arg(long)]
+        input: PathBuf,
+        /// 输出需求文件（JSON，默认 stdout 同内容）
+        #[arg(long)]
+        output: Option<PathBuf>,
+    },
+    /// 机制设计——结构化需求 → 机制规格（players/strategies/rules/objectives）
+    Design {
+        /// 输入需求文件（JSON）
+        #[arg(long)]
+        input: PathBuf,
+        /// 输出规格文件（JSON）
+        #[arg(long)]
+        output: Option<PathBuf>,
     },
 }
 
@@ -50,12 +70,42 @@ fn main() {
             MechanismAction::List => run_list(&path),
             MechanismAction::Show { id } => run_show(&path, &id),
         },
+        Commands::Clarify { input, output } => run_clarify(&input, output.as_deref()),
+        Commands::Design { input, output } => run_design(&input, output.as_deref()),
     };
 
     if let Err(e) = result {
         eprintln!("错误：{e}");
         process::exit(1);
     }
+}
+
+fn run_clarify(input: &Path, output: Option<&Path>) -> Result<(), String> {
+    let md = std::fs::read_to_string(input)
+        .map_err(|e| format!("读取 {} 失败：{e}", input.display()))?;
+    let req = clarify::clarify(&md)?;
+    let json = serde_json::to_string_pretty(&req).map_err(|e| format!("序列化失败：{e}"))?;
+    write_output(output, &json)?;
+    Ok(())
+}
+
+fn run_design(input: &Path, output: Option<&Path>) -> Result<(), String> {
+    let req_json = std::fs::read_to_string(input)
+        .map_err(|e| format!("读取 {} 失败：{e}", input.display()))?;
+    let spec = design::design(&req_json)?;
+    let json = serde_json::to_string_pretty(&spec).map_err(|e| format!("序列化失败：{e}"))?;
+    write_output(output, &json)?;
+    Ok(())
+}
+
+fn write_output(output: Option<&Path>, content: &str) -> Result<(), String> {
+    if let Some(path) = output {
+        std::fs::create_dir_all(path.parent().unwrap_or(path))
+            .map_err(|e| format!("mkdir: {e}"))?;
+        std::fs::write(path, content).map_err(|e| format!("write: {e}"))?;
+    }
+    println!("{content}");
+    Ok(())
 }
 
 fn run_list(path: &PathBuf) -> Result<(), String> {
