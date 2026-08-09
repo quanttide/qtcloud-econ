@@ -16,25 +16,25 @@ Mechanism
 └── objectives  设计目标（期望达成的结果）
 ```
 
-- [ ] 定义 Mechanism 领域模型（players/strategies/rules/objectives）
-- [ ] 定义 Strategy、Outcome 等配套类型
-- [ ] 对齐数据契约（YAML/JSON，供页面消费）
+- [x] 定义 Mechanism 领域模型（players/strategies/rules/objectives）
+- [x] 定义 Strategy、Outcome 等配套类型
+- [x] 对齐数据契约（YAML/JSON，供页面消费）
 
 ### 展示页面（`lib/screens/mechanism_screen.dart`）
 
-- [ ] 机制结构总览页（参与者/策略/规则/目标）
-- [ ] 机制卡片组件（`lib/components/mechanism_card.dart`）
-- [ ] 导航入口（侧边栏或首页接入）
+- [x] 机制结构总览页（参与者/策略/规则/目标）
+- [x] 机制卡片组件（`lib/widgets/mechanism_card.dart`）
+- [x] 导航入口（侧边栏或首页接入）
 
 ### 示例数据
 
-- [ ] 以招聘博弈机制为第一个示例（journal 2026-08-09：候选人池/自找题/市场化微型创业/三层筛选）
-- [ ] 示例数据文件（`assets/data/mechanisms.json`）
+- [x] 以招聘博弈机制为第一个示例（journal 2026-08-09：候选人池/自找题/市场化微型创业/三层筛选）
+- [x] 示例数据文件（`assets/data/mechanisms.json`）
 
 ### 验证
 
-- [ ] widget 测试（机制页面渲染）
-- [ ] flutter analyze 零问题
+- [x] widget 测试（机制页面渲染）
+- [x] flutter analyze 零问题
 
 ## 后续目标
 

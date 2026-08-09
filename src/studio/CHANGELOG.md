@@ -1,0 +1,17 @@
+# CHANGELOG
+
+## [0.1.0-alpha.1] - 2026-08-09
+
+### Added
+
+- 初始化 Flutter 项目（量潮经济云壳，全平台 + web 构建）
+- 机制设计模块：Mechanism 领域模型（players/strategies/rules/objectives）
+- 招聘博弈示例数据（`assets/data/mechanisms.json`）
+- 机制列表/详情页 + MechanismCard 组件 + 导航入口
+- 组件/模型测试（8 用例全绿：MechanismCard 渲染/统计/点击、列表页种子加载、详情页四要素）
+- CI：OSS 部署 + CDN 刷新（`deploy-studio.yml`，`studio/*` tag 触发）
+
+### Changed
+
+- 种子数据统一放 `assets/data/`（目录级注册）
+- components 目录更名 widgets（Flutter 惯例）
