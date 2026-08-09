@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.1.0-beta.1] - 2026-08-09
+
+### Changed
+
+- PWA 名称/描述：量潮经济云工作台（web/manifest.json）
+
 ## [0.1.0-alpha.3] - 2026-08-09
 
 ### Changed
