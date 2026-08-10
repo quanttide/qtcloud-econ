@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.1.0-beta.3] - 2026-08-09
+
+### Fixed
+
+- CanvasKit 渲染引擎本地化（--no-web-resources-cdn + FLUTTER_WEB_CANVASKIT_URL=/canvaskit/）——修复 gstatic 不可达导致的白屏/加载失败
+
 ## [0.1.0-beta.2] - 2026-08-09
 
 ### Added
