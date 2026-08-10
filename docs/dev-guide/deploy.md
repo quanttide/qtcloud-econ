@@ -96,6 +96,38 @@ gh run list --repo quanttide/qtcloud-econ
 - CDN 刷新步骤 `continue-on-error: true`——域名接入期刷新失败不阻断部署（内容已上传 OSS）
 - 上传步骤无容错：OSS 桶不存在时整体失败（见上线记录第 1 步）
 
+### 缓存策略（2026-08-09 踩坑）
+
+Flutter web 部署的缓存原则：**文件名带哈希的资源长缓存，路径固定的入口/数据文件 no-cache**。
+
+| 文件 | Cache-Control | 原因 |
+| --- | --- | --- |
+| `assets/` 目录（main.dart.js、图片等） | `max-age=31536000`（1 年） | 构建产物文件名带哈希，内容变则路径变，长缓存安全 |
+| `index.html` / `flutter_bootstrap.js` / `manifest.json` | `no-cache` | 入口文件，引导加载新版本 |
+| `assets/assets/data/mechanisms.json` | **`no-cache`（特殊）** | 路径固定 + 内容随版本变——长缓存会导致浏览器本地缓存旧数据（表现为“线上还是旧数据”） |
+
+经验：
+
+- **CDN 刷新管不到浏览器本地缓存**——1 年 max-age 的条目在过期前浏览器不会重新请求，发版后旧用户必须硬刷新（`Ctrl+Shift+R`）或改文件路径才能失效
+- 若已用长缓存发布过数据文件，需 `aliyun oss set-meta oss://bucket/path Cache-Control:no-cache -u` 改 OSS 元信息 + `aliyun cdn RefreshObjectCaches`（File 类型）刷新 CDN 响应头
+- CI 已对 mechanisms.json 单独 no-cache 上传（deploy-studio.yml），后续发版自动生效
+
+### CanvasKit 本地化（2026-08-09 踩坑）
+
+Flutter web 默认从 `https://www.gstatic.com/flutter-canvaskit/` 下载渲染引擎（canvaskit.wasm ~7.2MB）。**国内网络访问 gstatic 超时/不通 → 引擎加载卡住 → 白屏**。清空浏览器缓存后必现（此前可用是因为浏览器缓存了 canvaskit）。
+
+修复（构建参数，已写入 deploy-studio.yml）：
+
+```bash
+flutter build web --no-web-resources-cdn --dart-define=FLUTTER_WEB_CANVASKIT_URL=/canvaskit/
+```
+
+- `--no-web-resources-cdn` → buildConfig 写入 `useLocalCanvasKit: true`，loader 改用本地相对路径 `canvaskit/`
+- `FLUTTER_WEB_CANVASKIT_URL=/canvaskit/` → engine 编译常量（双保险）
+- 构建产物自带 `build/web/canvaskit/` 目录，CI 全目录上传后 OSS/CDN 已有本地 canvaskit，无需额外部署
+
+验证方法：`curl https://econ.cloud.quanttide.com/flutter_bootstrap.js` 末尾 buildConfig 应含 `"useLocalCanvasKit":true`。
+
 ## 运维清单
 
 - [ ] 证书到期前换发并重新部署（2026-11-04，ZeroSSL DV 3 个月期）
