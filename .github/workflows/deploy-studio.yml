@@ -30,6 +30,8 @@ jobs:
       - run: ossutil cp src/studio/build/web/manifest.json oss://qtcloud-econ-studio/manifest.json -f --meta=Cache-Control:no-cache
       - run: ossutil cp src/studio/build/web/index.html oss://qtcloud-econ-studio/index.html -f --meta=Cache-Control:no-cache
       - run: ossutil cp src/studio/build/web/flutter_bootstrap.js oss://qtcloud-econ-studio/flutter_bootstrap.js -f --meta=Cache-Control:no-cache
+      # 机制种子数据路径固定且内容随版本变更，必须 no-cache（否则浏览器本地长缓存旧数据）
+      - run: ossutil cp src/studio/build/web/assets/assets/data/mechanisms.json oss://qtcloud-econ-studio/assets/assets/data/mechanisms.json -f --meta=Cache-Control:no-cache
 
       - name: Refresh CDN
         # CDN 域名处于审核/接入期时刷新会失败，不应阻断整体部署（内容已上传 OSS）
