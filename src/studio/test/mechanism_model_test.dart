@@ -21,6 +21,13 @@ void main() {
         'objectives': [
           {'id': 'o1', 'name': '目标A', 'description': '目标描述'},
         ],
+        'relations': [
+          {
+            'type': 'parent',
+            'target_id': 'talent-development',
+            'label': '人才培养机制（整合）',
+          },
+        ],
       };
       final m = Mechanism.fromJson(json);
       expect(m.id, 'test-game');
@@ -28,12 +35,23 @@ void main() {
       expect(m.strategies.single.playerId, 'p1');
       expect(m.rules.single.name, '规则A');
       expect(m.objectives.single.name, '目标A');
+      expect(m.relations.single.type, 'parent');
+      expect(m.relations.single.targetId, 'talent-development');
+      expect(m.relations.single.label, '人才培养机制（整合）');
     });
 
     test('空列表容错', () {
       final m = Mechanism.fromJson({'id': 'x', 'name': 'X'});
       expect(m.players, isEmpty);
       expect(m.strategies, isEmpty);
+      expect(m.relations, isEmpty);
+    });
+
+    test('relatedMechanism 按 id 查找关联机制', () {
+      final a = Mechanism.fromJson({'id': 'a', 'name': 'A'});
+      final b = Mechanism.fromJson({'id': 'b', 'name': 'B'});
+      expect(a.relatedMechanism('b', [a, b])?.name, 'B');
+      expect(a.relatedMechanism('not-exist', [a, b]), isNull);
     });
   });
 }

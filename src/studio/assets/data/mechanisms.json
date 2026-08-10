@@ -113,6 +113,13 @@
           "name": "长期声誉保障",
           "description": "在不损害任何类型代理人利益（均自愿参与并有所获）的前提下保障平台长期声誉，实现帕累托改进"
         }
+      ],
+      "relations": [
+        {
+          "type": "parent",
+          "target_id": "talent-development",
+          "label": "人才培养机制（整合）"
+        }
       ]
     },
     {
@@ -267,6 +274,13 @@
           "name": "激励相容",
           "description": "诚实投入成为占优策略（培训资源+推荐信），开放资源与公平契约吸引高质量被投资方进入"
         }
+      ],
+      "relations": [
+        {
+          "type": "parent",
+          "target_id": "talent-development",
+          "label": "人才培养机制（整合）"
+        }
       ]
     },
     {
@@ -403,6 +417,18 @@
           "id": "obj_reputation",
           "name": "长期声誉",
           "description": "开源公共品与认证公信力：跨企业可信的人才评估维度，保障机制长期可信"
+        }
+      ],
+      "relations": [
+        {
+          "type": "sub_mechanism",
+          "target_id": "contribution-based-singaling",
+          "label": "甄别子阶段"
+        },
+        {
+          "type": "sub_mechanism",
+          "target_id": "human-capital-investment",
+          "label": "培养子阶段"
         }
       ]
     }

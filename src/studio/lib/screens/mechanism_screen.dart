@@ -26,8 +26,9 @@ class _MechanismScreenState extends State<MechanismScreen> {
 
   Future<void> _load() async {
     try {
-      final raw =
-          await DefaultAssetBundle.of(context).loadString('assets/data/mechanisms.json');
+      final raw = await DefaultAssetBundle.of(
+        context,
+      ).loadString('assets/data/mechanisms.json');
       final json = jsonDecode(raw) as Map<String, dynamic>;
       final list = (json['mechanisms'] as List? ?? [])
           .map((e) => Mechanism.fromJson(e as Map<String, dynamic>))
@@ -100,7 +101,10 @@ class _MechanismScreenState extends State<MechanismScreen> {
 
   void _openDetail(Mechanism m) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => MechanismDetailScreen(mechanism: m)),
+      MaterialPageRoute(
+        builder: (_) =>
+            MechanismDetailScreen(mechanism: m, allMechanisms: _mechanisms),
+      ),
     );
   }
 }
@@ -109,7 +113,14 @@ class _MechanismScreenState extends State<MechanismScreen> {
 class MechanismDetailScreen extends StatelessWidget {
   final Mechanism mechanism;
 
-  const MechanismDetailScreen({super.key, required this.mechanism});
+  /// 全部机制列表（用于解析关联跳转目标）
+  final List<Mechanism> allMechanisms;
+
+  const MechanismDetailScreen({
+    super.key,
+    required this.mechanism,
+    this.allMechanisms = const [],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -126,9 +137,16 @@ class MechanismDetailScreen extends StatelessWidget {
             mechanism.description,
             style: const TextStyle(fontSize: 13, color: Color(0xFF64748B)),
           ),
+          if (mechanism.relations.isNotEmpty) ...[
+            ..._relationSection(context),
+            const SizedBox(height: 16),
+          ],
           const SizedBox(height: 20),
-          _section('参与者', Icons.groups_outlined,
-              mechanism.players.map((p) => ('${p.name} · ${p.role}')).toList()),
+          _section(
+            '参与者',
+            Icons.groups_outlined,
+            mechanism.players.map((p) => ('${p.name} · ${p.role}')).toList(),
+          ),
           const SizedBox(height: 16),
           _section(
             '策略空间',
@@ -154,6 +172,97 @@ class MechanismDetailScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  /// 关联机制区块——父/子机制列表，点击跳转对应机制详情
+  List<Widget> _relationSection(BuildContext context) {
+    return [
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Row(
+              children: [
+                Icon(
+                  Icons.account_tree_outlined,
+                  size: 16,
+                  color: Color(0xFF4F46E5),
+                ),
+                SizedBox(width: 6),
+                Text(
+                  '关联机制',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w700,
+                    color: Color(0xFF1E293B),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 10),
+            ...mechanism.relations.map((r) {
+              final target = _findTarget(r.targetId);
+              final isParent = r.type == 'parent';
+              return InkWell(
+                onTap: target == null
+                    ? null
+                    : () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => MechanismDetailScreen(
+                            mechanism: target,
+                            allMechanisms: allMechanisms,
+                          ),
+                        ),
+                      ),
+                borderRadius: BorderRadius.circular(8),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 6),
+                  child: Row(
+                    children: [
+                      Icon(
+                        isParent
+                            ? Icons.call_merge_outlined
+                            : Icons.call_split_outlined,
+                        size: 14,
+                        color: const Color(0xFF4F46E5),
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(
+                        child: Text(
+                          '${isParent ? '父机制' : '子机制'} · ${r.label}',
+                          style: const TextStyle(
+                            fontSize: 12,
+                            color: Color(0xFF475569),
+                          ),
+                        ),
+                      ),
+                      if (target != null)
+                        const Icon(
+                          Icons.chevron_right,
+                          size: 16,
+                          color: Color(0xFF94A3B8),
+                        ),
+                    ],
+                  ),
+                ),
+              );
+            }),
+          ],
+        ),
+      ),
+    ];
+  }
+
+  Mechanism? _findTarget(String id) {
+    for (final m in allMechanisms) {
+      if (m.id == id) return m;
+    }
+    return null;
   }
 
   Widget _section(String title, IconData icon, List<String> items) {
@@ -187,13 +296,14 @@ class MechanismDetailScreen extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('· ',
-                      style: TextStyle(color: Color(0xFF4F46E5))),
+                  const Text('· ', style: TextStyle(color: Color(0xFF4F46E5))),
                   Expanded(
                     child: Text(
                       item,
                       style: const TextStyle(
-                          fontSize: 12, color: Color(0xFF475569)),
+                        fontSize: 12,
+                        color: Color(0xFF475569),
+                      ),
                     ),
                   ),
                 ],

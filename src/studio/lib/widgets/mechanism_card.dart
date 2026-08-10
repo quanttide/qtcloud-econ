@@ -32,8 +32,11 @@ class MechanismCard extends StatelessWidget {
                     color: const Color(0xFFE0E7FF),
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.account_tree_outlined,
-                      size: 18, color: Color(0xFF4F46E5)),
+                  child: const Icon(
+                    Icons.account_tree_outlined,
+                    size: 18,
+                    color: Color(0xFF4F46E5),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
@@ -55,6 +58,10 @@ class MechanismCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
               style: const TextStyle(fontSize: 12, color: Color(0xFF64748B)),
             ),
+            if (mechanism.relations.isNotEmpty) ...[
+              _relationBadges(),
+              const SizedBox(height: 10),
+            ],
             const SizedBox(height: 12),
             Row(
               children: [
@@ -69,6 +76,48 @@ class MechanismCard extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  /// 关联关系角标：整合子阶段 / 隶属于上层机制
+  Widget _relationBadges() {
+    final subCount = mechanism.relations
+        .where((r) => r.type == 'sub_mechanism')
+        .length;
+    final parents = mechanism.relations
+        .where((r) => r.type == 'parent')
+        .toList();
+    return Wrap(
+      spacing: 6,
+      runSpacing: 4,
+      children: [
+        if (subCount > 0)
+          _badge('整合 $subCount 个子阶段', Icons.account_tree_outlined),
+        ...parents.map(
+          (r) => _badge('隶属于 ${r.label}', Icons.call_merge_outlined),
+        ),
+      ],
+    );
+  }
+
+  Widget _badge(String text, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+      decoration: BoxDecoration(
+        color: const Color(0xFFEEF2FF),
+        borderRadius: BorderRadius.circular(999),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 11, color: const Color(0xFF4F46E5)),
+          const SizedBox(width: 4),
+          Text(
+            text,
+            style: const TextStyle(fontSize: 10, color: Color(0xFF4F46E5)),
+          ),
+        ],
       ),
     );
   }
