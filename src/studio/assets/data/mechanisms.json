@@ -114,6 +114,297 @@
           "description": "在不损害任何类型代理人利益（均自愿参与并有所获）的前提下保障平台长期声誉，实现帕累托改进"
         }
       ]
+    },
+    {
+      "id": "human-capital-investment",
+      "name": "人力资本投资模型",
+      "description": "企业以培训资源、真实生产环境与开源知识基座为投资投向学生与求职者，被投资方以努力与可验证成果作为反馈，构成“投资 → 反馈 → 再投资”的人力资本投资循环。",
+      "players": [
+        {
+          "id": "investor",
+          "name": "投资方",
+          "role": "委托人——企业，投入培训资源、实习机会、开源文档与代码、企业验收机制，投资的不可逆性使其必须设计有效的反馈机制"
+        },
+        {
+          "id": "student",
+          "name": "课堂学员",
+          "role": "被投资方——学生，以教学实习身份参与，获得成长与实习经历"
+        },
+        {
+          "id": "applicant",
+          "name": "招聘申请者",
+          "role": "被投资方——求职者，以考核身份参与，获得培训资源与认证"
+        },
+        {
+          "id": "partner",
+          "name": "合作方",
+          "role": "校方——组织支持与合规背书（教学实习、微专业体系）"
+        }
+      ],
+      "strategies": [
+        {
+          "id": "deep_investment",
+          "player_id": "student",
+          "name": "自主选题深度投入",
+          "description": "基于企业开源体系自主选题和实施，交付真实生产成果——被投资方的高投入高回报路径"
+        },
+        {
+          "id": "low_investment",
+          "player_id": "student",
+          "name": "标准方案低投入",
+          "description": "参与人工处理数据的标准方案（拧螺丝）——组织容易但成长有限"
+        },
+        {
+          "id": "pretend",
+          "player_id": "student",
+          "name": "伪装努力",
+          "description": "伪造成果或低质量交付，无法通过企业验收——信号成本使伪装不划算"
+        },
+        {
+          "id": "student_withdraw",
+          "player_id": "student",
+          "name": "退出",
+          "description": "选择外部实习机会，离开机制"
+        },
+        {
+          "id": "produce_results",
+          "player_id": "applicant",
+          "name": "产出真实成果",
+          "description": "在考核阶段交付可验证成果，达到招聘标准的更高分数线"
+        },
+        {
+          "id": "acquire_training",
+          "player_id": "applicant",
+          "name": "获取培训资源",
+          "description": "以投入等价兑换培训资源——即使未录用也有可携带回报"
+        },
+        {
+          "id": "applicant_withdraw",
+          "player_id": "applicant",
+          "name": "退出",
+          "description": "选择其他求职渠道，离开机制"
+        },
+        {
+          "id": "open_resources",
+          "player_id": "investor",
+          "name": "开放资源规模",
+          "description": "开放培训、开源文档与代码、实习席位——投资规模决定信号成本设计空间"
+        },
+        {
+          "id": "threshold_set",
+          "player_id": "investor",
+          "name": "考核分数线设定",
+          "description": "课堂学员与招聘申请者共用考核体系，分数线区隔——投资回报预期不同，反馈阈值不同"
+        },
+        {
+          "id": "recommend_issue",
+          "player_id": "investor",
+          "name": "推荐信发放",
+          "description": "标准化推荐信认证认可的工作成果——被投资方保底条款，维持参与意愿"
+        },
+        {
+          "id": "protect_delivery",
+          "player_id": "investor",
+          "name": "维持生产交付底线",
+          "description": "在不影响企业正常生产交付的前提下提供教学实习资源——投资不损害主业"
+        }
+      ],
+      "rules": [
+        {
+          "id": "rule_self_selection",
+          "name": "自主选题式生产实习",
+          "description": "学生基于企业开源体系自主选题和实施，复用企业验收机制考核——教学出口与企业生产标准统一，反馈真实可信"
+        },
+        {
+          "id": "rule_threshold",
+          "name": "同一考核、分数线区隔",
+          "description": "课堂学员与招聘申请者共用考核体系，合格标准不同（招聘要求更高：自主性、责任心、团队协作、真实成果）"
+        },
+        {
+          "id": "rule_equivalent_exchange",
+          "name": "培训资源等价兑换",
+          "description": "培训、资源与招聘申请者的投入等价兑换——以公平市场契约守护投资方底线，同时展示投资意愿（企业文化信号）"
+        },
+        {
+          "id": "rule_recommendation",
+          "name": "标准化推荐信保底",
+          "description": "无论是否通过考核，认可的工作成果均以标准化推荐信认证——被投资方即使未录用也有可携带回报（参与约束）"
+        },
+        {
+          "id": "rule_open_source",
+          "name": "开源支撑",
+          "description": "开源公司所有可开源的文档与代码（GitHub 组织 quanttide）——降低被投资方参与成本，作为行业公共品扩大投资的社会回报"
+        },
+        {
+          "id": "rule_delivery_baseline",
+          "name": "生产交付底线",
+          "description": "在不影响企业正常生产交付的前提下提供教学实习资源——投资不损害主业"
+        }
+      ],
+      "objectives": [
+        {
+          "id": "obj_signal",
+          "name": "人才信号",
+          "description": "真实生产成果是可验证的高成本信号，低能力/低动机者难以模仿——信息租金最小化"
+        },
+        {
+          "id": "obj_direct_return",
+          "name": "生产成果直接收益",
+          "description": "教学产出即生产成果——投资本身产生直接收益，对冲投资不可逆性"
+        },
+        {
+          "id": "obj_reputation",
+          "name": "声誉回报",
+          "description": "推荐信与开源的公信力构成长期声誉资产，吸引更多被投资方进入（投资池扩大）"
+        },
+        {
+          "id": "obj_participation",
+          "name": "参与约束双向成立",
+          "description": "被投资方：推荐信保底+培训资源，收益不低于外部选择；投资方：生产交付底线+分数线区隔，投资不损害主业"
+        },
+        {
+          "id": "obj_incentive",
+          "name": "激励相容",
+          "description": "诚实投入成为占优策略（培训资源+推荐信），开放资源与公平契约吸引高质量被投资方进入"
+        }
+      ]
+    },
+    {
+      "id": "talent-development",
+      "name": "人才培养机制",
+      "description": "整合信号甄别与人力资本投资的完整生命周期机制：契约准入甄别类型，资源投入培养人才，可验证成果作为统一信号与回报度量，实现从进入到兑现的人才培养闭环。",
+      "players": [
+        {
+          "id": "trainee",
+          "name": "培养对象",
+          "role": "代理人——候选人/学员，类型（理想型/白嫖型/短期型）为私人信息"
+        },
+        {
+          "id": "developer",
+          "name": "培养者",
+          "role": "委托人——企业/平台，投资方与机制设计者，拥有资源所有权与录用权"
+        },
+        {
+          "id": "partner",
+          "name": "合作方",
+          "role": "校方——组织支持与合规背书（教学实习、微专业体系）"
+        }
+      ],
+      "strategies": [
+        {
+          "id": "contract_a_contender",
+          "player_id": "trainee",
+          "name": "契约A·竞逐者",
+          "description": "高风险高回报：深度投入创造增量产出，换取培养资源与录用门票——甄别入口，理想型的最优选择"
+        },
+        {
+          "id": "contract_b_explorer",
+          "player_id": "trainee",
+          "name": "契约B·探索者/付费者",
+          "description": "低风险直接回报：付费或低强度参与，直接获取结构化培训资源——白嫖型的最优选择"
+        },
+        {
+          "id": "pretend_effort",
+          "player_id": "trainee",
+          "name": "伪装努力",
+          "description": "在契约A中假装努力，但无法交付可验证成果——低类型在契约A中的劣势策略"
+        },
+        {
+          "id": "withdraw",
+          "player_id": "trainee",
+          "name": "退出",
+          "description": "选择外部机会（保留效用），机制外的退出选项"
+        },
+        {
+          "id": "invest_resources",
+          "player_id": "developer",
+          "name": "资源投入",
+          "description": "投入培训额度、开源基座、实习席位等培养资源，构成投资规模"
+        },
+        {
+          "id": "menu_design",
+          "player_id": "developer",
+          "name": "契约菜单设计",
+          "description": "提供契约A/契约B自我选择菜单，形成甄别入口"
+        },
+        {
+          "id": "threshold_set",
+          "player_id": "developer",
+          "name": "分数线设定",
+          "description": "同一考核、分数线区隔：课堂标准（成长导向）与招聘标准（产出导向）"
+        },
+        {
+          "id": "certify_issue",
+          "player_id": "developer",
+          "name": "认证发放",
+          "description": "标准化推荐信/成果认证——无论是否通过考核，认可的工作成果均予背书（保底条款）"
+        },
+        {
+          "id": "stop_loss",
+          "player_id": "developer",
+          "name": "止损",
+          "description": "终止培养或不录用——投资观察期结束后的退出决策"
+        }
+      ],
+      "rules": [
+        {
+          "id": "rule_admission",
+          "name": "准入",
+          "description": "契约A/B自我选择，类型通过选择暴露——分离均衡的入口"
+        },
+        {
+          "id": "rule_cultivation",
+          "name": "培养",
+          "description": "培训额度等价兑换；交叉补贴——契约B的付费收入补贴契约A的筛选与培养成本"
+        },
+        {
+          "id": "rule_output",
+          "name": "产出",
+          "description": "可验证的增量成果（外部市场订单、内部增效方案等）——信号与回报度量的统一载体"
+        },
+        {
+          "id": "rule_realization",
+          "name": "兑现",
+          "description": "录用 / 标准化推荐信保底 / 止损（终止培养或不录用）"
+        },
+        {
+          "id": "rule_baseline",
+          "name": "底线",
+          "description": "不影响企业正常生产交付；同一考核、分数线区隔课堂与招聘标准"
+        },
+        {
+          "id": "rule_signal_cost",
+          "name": "信号成本",
+          "description": "增量产出的信号代价足够高昂，低类型无法模仿高类型——信息租金最小化"
+        }
+      ],
+      "objectives": [
+        {
+          "id": "obj_screen",
+          "name": "甄别人才",
+          "description": "分离均衡：有效区分理想型、白嫖型与短期型，识别值得培养的人"
+        },
+        {
+          "id": "obj_develop",
+          "name": "培养成才",
+          "description": "投资回报：培养对象产出真实成果，培养者获得人才信号、生产成果与声誉"
+        },
+        {
+          "id": "obj_guarantee",
+          "name": "参与约束",
+          "description": "各类型培养对象均有保底收益（推荐信认证、培训资源），收益不低于外部选择"
+        },
+        {
+          "id": "obj_balance",
+          "name": "预算平衡",
+          "description": "培养成本被覆盖：理想型产出覆盖成本并创造利润，交叉补贴维持动态平衡"
+        },
+        {
+          "id": "obj_reputation",
+          "name": "长期声誉",
+          "description": "开源公共品与认证公信力：跨企业可信的人才评估维度，保障机制长期可信"
+        }
+      ]
     }
   ]
 }
