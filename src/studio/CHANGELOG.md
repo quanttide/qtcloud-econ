@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## [0.1.0-alpha.4] - 2026-08-10
+
+### Changed
+
+- 站点名称/描述统一为量潮经济云（index.html 与 manifest.json 一致）
+
 ## [0.1.0-beta.4] - 2026-08-09
 
 ### Added
