@@ -174,8 +174,16 @@ class MechanismDetailScreen extends StatelessWidget {
     );
   }
 
-  /// 关联机制区块——父/子机制列表，点击跳转对应机制详情
+  /// 机制关系区块——包含的子机制（树形展开）+ 上层机制（跳转）
   List<Widget> _relationSection(BuildContext context) {
+    final subs = mechanism.relations
+        .where((r) => r.type == 'sub_mechanism')
+        .toList();
+    final parents = mechanism.relations
+        .where((r) => r.type == 'parent')
+        .toList();
+    if (subs.isEmpty && parents.isEmpty) return const [];
+    final title = subs.isNotEmpty ? '包含的子机制（${subs.length}）' : '上层机制';
     return [
       Container(
         padding: const EdgeInsets.all(16),
@@ -186,17 +194,17 @@ class MechanismDetailScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Row(
+            Row(
               children: [
-                Icon(
+                const Icon(
                   Icons.account_tree_outlined,
                   size: 16,
                   color: Color(0xFF4F46E5),
                 ),
-                SizedBox(width: 6),
+                const SizedBox(width: 6),
                 Text(
-                  '关联机制',
-                  style: TextStyle(
+                  title,
+                  style: const TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w700,
                     color: Color(0xFF1E293B),
@@ -205,57 +213,132 @@ class MechanismDetailScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            ...mechanism.relations.map((r) {
-              final target = _findTarget(r.targetId);
-              final isParent = r.type == 'parent';
-              return InkWell(
-                onTap: target == null
-                    ? null
-                    : () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => MechanismDetailScreen(
-                            mechanism: target,
-                            allMechanisms: allMechanisms,
-                          ),
-                        ),
-                      ),
-                borderRadius: BorderRadius.circular(8),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Row(
-                    children: [
-                      Icon(
-                        isParent
-                            ? Icons.call_merge_outlined
-                            : Icons.call_split_outlined,
-                        size: 14,
-                        color: const Color(0xFF4F46E5),
-                      ),
-                      const SizedBox(width: 6),
-                      Expanded(
-                        child: Text(
-                          '${isParent ? '父机制' : '子机制'} · ${r.label}',
-                          style: const TextStyle(
-                            fontSize: 12,
-                            color: Color(0xFF475569),
-                          ),
-                        ),
-                      ),
-                      if (target != null)
-                        const Icon(
-                          Icons.chevron_right,
-                          size: 16,
-                          color: Color(0xFF94A3B8),
-                        ),
-                    ],
-                  ),
-                ),
-              );
-            }),
+            ...subs.map((r) => _subMechanismTile(context, r)),
+            ...parents.map((r) => _parentTile(context, r)),
           ],
         ),
       ),
     ];
+  }
+
+  /// 子机制树形卡片——展开查看四要素统计，点击跳转详情
+  Widget _subMechanismTile(BuildContext context, MechanismRelation r) {
+    final target = _findTarget(r.targetId);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF8FAFC),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: ExpansionTile(
+        shape: const Border(),
+        collapsedShape: const Border(),
+        tilePadding: const EdgeInsets.symmetric(horizontal: 12),
+        childrenPadding: const EdgeInsets.fromLTRB(12, 0, 12, 10),
+        leading: const Icon(
+          Icons.call_split_outlined,
+          size: 18,
+          color: Color(0xFF4F46E5),
+        ),
+        title: Text(
+          target?.name ?? r.label,
+          style: const TextStyle(
+            fontSize: 13,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF1E293B),
+          ),
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              '${r.label}${target == null ? '' : ' · ${target.id}'}',
+              style: const TextStyle(fontSize: 10, color: Color(0xFF94A3B8)),
+            ),
+            if (target != null) ...[
+              const SizedBox(height: 4),
+              Text(
+                target.description,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(fontSize: 11, color: Color(0xFF64748B)),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                '参与者 ${target.players.length} · 策略 ${target.strategies.length}'
+                ' · 规则 ${target.rules.length} · 目标 ${target.objectives.length}',
+                style: const TextStyle(fontSize: 10, color: Color(0xFF4F46E5)),
+              ),
+            ],
+          ],
+        ),
+        children: [
+          if (target != null)
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton.icon(
+                onPressed: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => MechanismDetailScreen(
+                      mechanism: target,
+                      allMechanisms: allMechanisms,
+                    ),
+                  ),
+                ),
+                icon: const Icon(Icons.open_in_new, size: 14),
+                label: const Text('查看完整机制'),
+                style: TextButton.styleFrom(
+                  foregroundColor: const Color(0xFF4F46E5),
+                  textStyle: const TextStyle(fontSize: 12),
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  /// 上层机制条目——点击跳转
+  Widget _parentTile(BuildContext context, MechanismRelation r) {
+    final target = _findTarget(r.targetId);
+    return InkWell(
+      onTap: target == null
+          ? null
+          : () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => MechanismDetailScreen(
+                  mechanism: target,
+                  allMechanisms: allMechanisms,
+                ),
+              ),
+            ),
+      borderRadius: BorderRadius.circular(8),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6),
+        child: Row(
+          children: [
+            const Icon(
+              Icons.call_merge_outlined,
+              size: 14,
+              color: Color(0xFF4F46E5),
+            ),
+            const SizedBox(width: 6),
+            Expanded(
+              child: Text(
+                '${r.label}（${target?.name ?? r.targetId}）',
+                style: const TextStyle(fontSize: 12, color: Color(0xFF475569)),
+              ),
+            ),
+            if (target != null)
+              const Icon(
+                Icons.chevron_right,
+                size: 16,
+                color: Color(0xFF94A3B8),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 
   Mechanism? _findTarget(String id) {
